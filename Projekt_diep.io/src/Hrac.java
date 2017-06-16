@@ -65,45 +65,19 @@ class Hrac implements Runnable{
         pb.setScaleY(1.5);
         p.getChildren().add(pb);
 	}
+	
+	public void dmg(double d){
+		if (curHp > 0){
+			curHp -= d;
+		}
+		else {
+			curHp = 0;
+		}
+	}
 
 	@Override
 	public void run() {
 		while (true){
-			
-			ArrayList<Object> to_destroy = new ArrayList<Object>();
-			
-			for (int i = 0;i < p.other_objects.size();i++){
-				if (p.other_objects.get(i).collidesWPlayer(this)){
-					p.other_objects.get(i).update();
-					if (this.curHp > 0)
-						this.curHp -= p.other_objects.get(i).dmg;
-					else {
-						curHp = 0;
-					}
-						
-					if (p.other_objects.get(i).curHp > 0)
-						p.other_objects.get(i).curHp -= this.dmg;
-					else 
-						p.other_objects.get(i).curHp = 0;
-					
-					if (p.other_objects.get(i).destroy()){
-						to_destroy.add(p.other_objects.get(i));
-						
-					}
-					p.other_objects.removeAll(to_destroy);
-					
-				}
-			}
-			
-			synchronized(p) {
-				for (int i = 0;i < p.strely.size();i++){
-					p.strely.get(i).update();
-					if (p.strely.get(i).destroy()){
-						to_destroy.add(p.strely.get(i));
-					}
-				}
-				p.strely.removeAll(to_destroy);
-			}
 			
 			if (p.UP && p.RIGHT){
 				for (int i = 0;i < p.strely.size();i++){

@@ -34,6 +34,14 @@ public abstract class Object implements Serializable {
 	public boolean collidesWPlayer(Hrac hrac){
 		return false;
 	}
+	
+	public void dmg(double d){
+		throw new java.lang.UnsupportedOperationException("Not implemented.");
+	}
+	
+	public boolean collidesWStrela(Strela strela){
+		return false;
+	}
 
 }
 

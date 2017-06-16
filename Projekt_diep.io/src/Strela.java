@@ -21,7 +21,7 @@ class Strela extends Object implements Runnable{
 
 	public Strela(Plocha plocha,double clicked_x,double clicked_y){
 		p = plocha;
-		dmg = 2;
+		dmg = 10;
 		target_x = clicked_x;
 		target_y = clicked_y;
 		angle = Math.atan2(p.hrac.x - clicked_x, p.hrac.y - clicked_y) - Math.PI / 2;

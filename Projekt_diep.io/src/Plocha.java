@@ -17,7 +17,7 @@ public class Plocha extends Pane implements Runnable{
 	public Hrac hrac;
 	public Strela strela;
 	public ArrayList<Object> other_objects = new ArrayList<Object>();
-	public ArrayList<Object> strely = new ArrayList<Object>();
+	public ArrayList<Strela> strely = new ArrayList<Strela>();
 	private boolean drag = false;
 	private boolean klik = false;
 	public Timer timer;
@@ -39,6 +39,72 @@ public class Plocha extends Pane implements Runnable{
         timer = new Timer();
         
         
+        setOnKeyPressed(event -> {
+			if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.W)){
+				UP = true;
+			}
+			if (event.getCode().equals(KeyCode.DOWN) || event.getCode().equals(KeyCode.S)){
+				DOWN = true;
+			}
+			if (event.getCode().equals(KeyCode.LEFT) || event.getCode().equals(KeyCode.A)){
+				LEFT = true;
+			}
+			if (event.getCode().equals(KeyCode.RIGHT) || event.getCode().equals(KeyCode.D)){
+				RIGHT = true;
+			}
+		});
+		
+		setOnKeyReleased(event -> {
+			if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.W)){
+				UP = false;
+			}
+			if (event.getCode().equals(KeyCode.DOWN) || event.getCode().equals(KeyCode.S)){
+				DOWN = false;
+			}
+			if (event.getCode().equals(KeyCode.LEFT) || event.getCode().equals(KeyCode.A)){
+				LEFT = false;
+			}
+			if (event.getCode().equals(KeyCode.RIGHT) || event.getCode().equals(KeyCode.D)){
+				RIGHT = false;
+			}
+		});
+		
+		setOnMousePressed(event -> {	
+			this.event_x = event.getX();
+        	this.event_y = event.getY();
+        	hrac.angle = Math.atan2(hrac.y - event.getY(), hrac.x - event.getX()) - Math.PI / 2;
+        	if (!drag && !klik)
+        	{		
+        		resume();
+        		resume_klik();
+        	}
+		});
+		
+		setOnMouseReleased(event -> {
+				pause();
+		});
+        
+        setOnMouseMoved(event -> {
+        	hrac.angle = Math.atan2(hrac.y - event.getY(), hrac.x - event.getX()) - Math.PI / 2;
+        });
+        
+        setOnMouseDragged(event -> {
+        	this.event_x = event.getX();
+        	this.event_y = event.getY();
+        	hrac.angle = Math.atan2(hrac.y - event.getY(), hrac.x - event.getX()) - Math.PI / 2;
+        	if (!drag && !klik)
+        	{		
+        		resume();
+        		resume_klik();
+        	}
+        });
+        
+        setOnMouseDragReleased(event -> {
+        	pause();
+        });
+	}
+	
+	public void generateObjects(){
 	}
 	
 	public void repaint() {
@@ -55,6 +121,10 @@ public class Plocha extends Pane implements Runnable{
 	
 	public void clearScreen(){
 		getChildren().clear();
+		Rectangle b= new Rectangle(3200, 2560, Color.BROWN);
+		b.setX(-800);
+		b.setY(-640);
+		getChildren().add(b);
 		Rectangle box = new Rectangle(800, 640, Color.WHITE);
 		box.setX(0);
 		box.setY(0);
@@ -87,7 +157,7 @@ public class Plocha extends Pane implements Runnable{
 		       @Override
 		       public void run() {
 		    	   Strela strela = new Strela(p,event_x,event_y);
-		    	   strely.add(strela);
+		    	   p.strely.add(strela);
 		       }
 		}, 0, hrac.attack_speed);
 	    
@@ -96,69 +166,43 @@ public class Plocha extends Pane implements Runnable{
 	@Override
 	public void run() {
 		while (true){
-			setOnKeyPressed(event -> {
-				if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.W)){
-					UP = true;
+			ArrayList<Object> to_destroy = new ArrayList<Object>();
+			for (int i = 0;i < p.other_objects.size();i++){
+				if (p.other_objects.get(i).collidesWPlayer(hrac)){
+					hrac.dmg(p.other_objects.get(i).dmg);
+					p.other_objects.get(i).dmg(hrac.dmg);
+					if (p.other_objects.get(i).destroy()){
+						to_destroy.add(p.other_objects.get(i));
+					}
 				}
-				if (event.getCode().equals(KeyCode.DOWN) || event.getCode().equals(KeyCode.S)){
-					DOWN = true;
+				for (int j = 0;j < p.strely.size();j++){
+					if (p.other_objects.get(i).collidesWStrela(p.strely.get(j))){
+						p.other_objects.get(i).dmg(hrac.dmg);
+						if (p.other_objects.get(i).destroy()){
+							to_destroy.add(p.other_objects.get(i));
+						}
+						to_destroy.add(p.strely.get(i));
+					}
 				}
-				if (event.getCode().equals(KeyCode.LEFT) || event.getCode().equals(KeyCode.A)){
-					LEFT = true;
+			}
+			p.other_objects.removeAll(to_destroy);
+			synchronized(p) {
+				for (int i = 0;i < p.strely.size();i++){
+					p.strely.get(i).update();
+					if (p.strely.get(i).destroy()){
+						to_destroy.add(p.strely.get(i));
+					}
 				}
-				if (event.getCode().equals(KeyCode.RIGHT) || event.getCode().equals(KeyCode.D)){
-					RIGHT = true;
-				}
-			});
+				p.strely.removeAll(to_destroy);
+			}
 			
-			setOnKeyReleased(event -> {
-				if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.W)){
-					UP = false;
-				}
-				if (event.getCode().equals(KeyCode.DOWN) || event.getCode().equals(KeyCode.S)){
-					DOWN = false;
-				}
-				if (event.getCode().equals(KeyCode.LEFT) || event.getCode().equals(KeyCode.A)){
-					LEFT = false;
-				}
-				if (event.getCode().equals(KeyCode.RIGHT) || event.getCode().equals(KeyCode.D)){
-					RIGHT = false;
-				}
-			});
 			
-			setOnMousePressed(event -> {	
-				this.event_x = event.getX();
-	        	this.event_y = event.getY();
-	        	hrac.angle = Math.atan2(hrac.y - event.getY(), hrac.x - event.getX()) - Math.PI / 2;
-	        	if (!drag && !klik)
-	        	{		
-	        		resume();
-	        		resume_klik();
-	        	}
-			});
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
-			setOnMouseReleased(event -> {
-					pause();
-			});
-	        
-	        setOnMouseMoved(event -> {
-	        	hrac.angle = Math.atan2(hrac.y - event.getY(), hrac.x - event.getX()) - Math.PI / 2;
-	        });
-	        
-	        setOnMouseDragged(event -> {
-	        	this.event_x = event.getX();
-	        	this.event_y = event.getY();
-	        	hrac.angle = Math.atan2(hrac.y - event.getY(), hrac.x - event.getX()) - Math.PI / 2;
-	        	if (!drag && !klik)
-	        	{		
-	        		resume();
-	        		resume_klik();
-	        	}
-	        });
-	        
-	        setOnMouseDragReleased(event -> {
-	        	pause();
-	        });
 		}
 	}
 }
