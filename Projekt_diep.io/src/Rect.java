@@ -35,7 +35,7 @@ public class Rect extends Object{
 	     ProgressBar pb = new ProgressBar(curHp/maxHp);
 	     pb.setLayoutX(bar_x);
 	     pb.setLayoutY(bar_y);
-	     pb.setStyle("-fx-accent: yellow;"); 
+	     pb.setStyle("-fx-accent: orange;"); 
 	     pb.setScaleX(0.38);
 	     pb.setScaleY(0.4);
 	     p.getChildren().add(pb);
