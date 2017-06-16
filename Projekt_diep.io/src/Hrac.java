@@ -35,16 +35,7 @@ class Hrac implements Runnable{
 		bar_y = 600;
 		angle = 0;
 		p = plocha;
-		
-		x = 400;
-		y = 320;
-		dmg = 10;
-		curHp = maxHp;
-		bar_x = 345;
-		bar_y = 600;
-		angle = 0;
-		p = plocha;
-		
+
 		
 	}
 	
