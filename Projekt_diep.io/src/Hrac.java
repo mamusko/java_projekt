@@ -15,7 +15,7 @@ class Hrac implements Runnable{
 	double bar_x;
 	double bar_y;
 	double dmg;
-	double maxHp = 500;
+	double maxHp = 50;
 	double curHp;
 	double h = 50;
 	double w = 20;
@@ -27,6 +27,15 @@ class Hrac implements Runnable{
 	double movement_speed = 0.5;
 
 	public Hrac(Plocha plocha){
+		x = 400;
+		y = 320;
+		dmg = 10;
+		curHp = maxHp;
+		bar_x = 345;
+		bar_y = 600;
+		angle = 0;
+		p = plocha;
+		
 		x = 400;
 		y = 320;
 		dmg = 10;
