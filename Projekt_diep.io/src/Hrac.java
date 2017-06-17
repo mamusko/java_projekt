@@ -15,21 +15,21 @@ class Hrac implements Runnable{
 	double bar_x;
 	double bar_y;
 	double dmg;
-	double maxHp = 50;
+	double maxHp = 500;
 	double curHp;
 	double h = 50;
 	double w = 20;
 	double r = 30;
-	int attack_speed = 300;
+	int attack_speed = 200;
 	double angle;
 	Plocha p;
 	double bullet_speeed;
-	double movement_speed = 0.5;
+	double movement_speed = 5;
 
 	public Hrac(Plocha plocha){
 		x = 400;
 		y = 320;
-		dmg = 10;
+		dmg = 150;
 		curHp = maxHp;
 		bar_x = 345;
 		bar_y = 600;
@@ -60,7 +60,12 @@ class Hrac implements Runnable{
         ProgressBar pb = new ProgressBar(curHp/maxHp);
         pb.setLayoutX(bar_x);
         pb.setLayoutY(bar_y);
-        pb.setStyle("-fx-accent: green;"); 
+        if (curHp > maxHp/2)
+        	pb.setStyle("-fx-accent: green;"); 
+        else if (curHp < maxHp/8)
+        	pb.setStyle("-fx-accent: red;"); 
+        else
+        	pb.setStyle("-fx-accent: orange;"); 
         pb.setScaleX(1.8);
         pb.setScaleY(1.5);
         p.getChildren().add(pb);
@@ -79,97 +84,100 @@ class Hrac implements Runnable{
 	public void run() {
 		while (true){
 			
-			if (p.UP && p.RIGHT){
-				for (int i = 0;i < p.strely.size();i++){
-					p.strely.get(i).y += movement_speed*0.7;
-					p.strely.get(i).x -= movement_speed*0.7;
+			try {
+				if (p.UP && p.RIGHT){
+					for (int i = 0;i < p.strely.size();i++){
+						p.strely.get(i).y += movement_speed*0.7;
+						p.strely.get(i).x -= movement_speed*0.7;
+					}
+					for (int i = 0;i < p.other_objects.size();i++){
+						p.other_objects.get(i).y += movement_speed*0.7;
+						p.other_objects.get(i).x -= movement_speed*0.7;
+						p.other_objects.get(i).bar_y += movement_speed*0.7;
+						p.other_objects.get(i).bar_x -= movement_speed*0.7;
+					}
 				}
-				for (int i = 0;i < p.other_objects.size();i++){
-					p.other_objects.get(i).y += movement_speed*0.7;
-					p.other_objects.get(i).x -= movement_speed*0.7;
-					p.other_objects.get(i).bar_y += movement_speed*0.7;
-					p.other_objects.get(i).bar_x -= movement_speed*0.7;
+				else if (p.UP && p.LEFT){
+					for (int i = 0;i < p.strely.size();i++){
+						p.strely.get(i).y += movement_speed*0.7;
+						p.strely.get(i).x += movement_speed*0.7;
+					}
+					for (int i = 0;i < p.other_objects.size();i++){
+						p.other_objects.get(i).y += movement_speed*0.7;
+						p.other_objects.get(i).x += movement_speed*0.7;
+						p.other_objects.get(i).bar_y += movement_speed*0.7;
+						p.other_objects.get(i).bar_x += movement_speed*0.7;
+					}
 				}
-			}
-			else if (p.UP && p.LEFT){
-				for (int i = 0;i < p.strely.size();i++){
-					p.strely.get(i).y += movement_speed*0.7;
-					p.strely.get(i).x += movement_speed*0.7;
+				else if (p.DOWN && p.RIGHT){
+					for (int i = 0;i < p.strely.size();i++){
+						p.strely.get(i).y -= movement_speed*0.7;
+						p.strely.get(i).x -= movement_speed*0.7;
+					}
+					for (int i = 0;i < p.other_objects.size();i++){
+						p.other_objects.get(i).y -= movement_speed*0.7;
+						p.other_objects.get(i).x -= movement_speed*0.7;
+						p.other_objects.get(i).bar_y -= movement_speed*0.7;
+						p.other_objects.get(i).bar_x -= movement_speed*0.7;
+						
+					}
 				}
-				for (int i = 0;i < p.other_objects.size();i++){
-					p.other_objects.get(i).y += movement_speed*0.7;
-					p.other_objects.get(i).x += movement_speed*0.7;
-					p.other_objects.get(i).bar_y += movement_speed*0.7;
-					p.other_objects.get(i).bar_x += movement_speed*0.7;
+				else if (p.DOWN && p.LEFT){
+					for (int i = 0;i < p.strely.size();i++){
+						p.strely.get(i).y -= movement_speed*0.7;
+						p.strely.get(i).x += movement_speed*0.7;
+					}
+					for (int i = 0;i < p.other_objects.size();i++){
+						p.other_objects.get(i).y -= movement_speed*0.7;
+						p.other_objects.get(i).x += movement_speed*0.7;
+						p.other_objects.get(i).bar_y -= movement_speed*0.7;
+						p.other_objects.get(i).bar_x += movement_speed*0.7;
+					}
 				}
-			}
-			else if (p.DOWN && p.RIGHT){
-				for (int i = 0;i < p.strely.size();i++){
-					p.strely.get(i).y -= movement_speed*0.7;
-					p.strely.get(i).x -= movement_speed*0.7;
+				else if (p.UP){
+					for (int i = 0;i < p.strely.size();i++){
+						p.strely.get(i).y += movement_speed;
+					}
+					for (int i = 0;i < p.other_objects.size();i++){
+						p.other_objects.get(i).y += movement_speed;
+						p.other_objects.get(i).bar_y += movement_speed;
+					}
 				}
-				for (int i = 0;i < p.other_objects.size();i++){
-					p.other_objects.get(i).y -= movement_speed*0.7;
-					p.other_objects.get(i).x -= movement_speed*0.7;
-					p.other_objects.get(i).bar_y -= movement_speed*0.7;
-					p.other_objects.get(i).bar_x -= movement_speed*0.7;
+				else if (p.DOWN){
+					for (int i = 0;i < p.strely.size();i++){
+						p.strely.get(i).y -= movement_speed;
+					}
+					for (int i = 0;i < p.other_objects.size();i++){
+						p.other_objects.get(i).y -= movement_speed;
+						p.other_objects.get(i).bar_y -= movement_speed;
+					}
+				}
+				else if (p.LEFT){
+					for (int i = 0;i < p.strely.size();i++){
+						p.strely.get(i).x += movement_speed;
+					}
+					for (int i = 0;i < p.other_objects.size();i++){
+						p.other_objects.get(i).x += movement_speed;
+						p.other_objects.get(i).bar_x += movement_speed;
+					}
+				}
+				else if (p.RIGHT){
+					for (int i = 0;i < p.strely.size();i++){
+						p.strely.get(i).x -= movement_speed;
+					}
+					for (int i = 0;i < p.other_objects.size();i++){
+						p.other_objects.get(i).x -= movement_speed;
+						p.other_objects.get(i).bar_x -= movement_speed;
+					}
 					
 				}
-			}
-			else if (p.DOWN && p.LEFT){
-				for (int i = 0;i < p.strely.size();i++){
-					p.strely.get(i).y -= movement_speed*0.7;
-					p.strely.get(i).x += movement_speed*0.7;
-				}
-				for (int i = 0;i < p.other_objects.size();i++){
-					p.other_objects.get(i).y -= movement_speed*0.7;
-					p.other_objects.get(i).x += movement_speed*0.7;
-					p.other_objects.get(i).bar_y -= movement_speed*0.7;
-					p.other_objects.get(i).bar_x += movement_speed*0.7;
-				}
-			}
-			else if (p.UP){
-				for (int i = 0;i < p.strely.size();i++){
-					p.strely.get(i).y += movement_speed;
-				}
-				for (int i = 0;i < p.other_objects.size();i++){
-					p.other_objects.get(i).y += movement_speed;
-					p.other_objects.get(i).bar_y += movement_speed;
-				}
-			}
-			else if (p.DOWN){
-				for (int i = 0;i < p.strely.size();i++){
-					p.strely.get(i).y -= movement_speed;
-				}
-				for (int i = 0;i < p.other_objects.size();i++){
-					p.other_objects.get(i).y -= movement_speed;
-					p.other_objects.get(i).bar_y -= movement_speed;
-				}
-			}
-			else if (p.LEFT){
-				for (int i = 0;i < p.strely.size();i++){
-					p.strely.get(i).x += movement_speed;
-				}
-				for (int i = 0;i < p.other_objects.size();i++){
-					p.other_objects.get(i).x += movement_speed;
-					p.other_objects.get(i).bar_x += movement_speed;
-				}
-			}
-			else if (p.RIGHT){
-				for (int i = 0;i < p.strely.size();i++){
-					p.strely.get(i).x -= movement_speed;
-				}
-				for (int i = 0;i < p.other_objects.size();i++){
-					p.other_objects.get(i).x -= movement_speed;
-					p.other_objects.get(i).bar_x -= movement_speed;
-				}
-				
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
 			
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 			
 			Platform.runLater(new Runnable() {

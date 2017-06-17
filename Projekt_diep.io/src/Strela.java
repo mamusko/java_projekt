@@ -15,7 +15,7 @@ class Strela extends Object implements Runnable{
 	double dy;
 	double distance;
 	int lifetime = 0;
-	int max_lifetime = 250;
+	int max_lifetime = 300;
 	Plocha p;
 	
 
@@ -41,8 +41,8 @@ class Strela extends Object implements Runnable{
 		
 		double vx = 100 * dx / distance;
 		double vy = 100 * dy / distance;
-		x = x +  vx/100;
-		y = y +  vy/100;
+		x = x +  vx/50;
+		y = y +  vy/50;
 		lifetime++;
 		
 		

@@ -69,11 +69,9 @@ public class Rect extends Object{
 		return false;
 	}
 	
-	public void dmg(double d){
-		if (curHp > 0){
-			curHp -= d;
-		}
-		else {
+	public void dmg(double d){	
+		curHp -= d;
+		if (curHp <= 0){
 			curHp = 0;
 			destroy = true;
 		}

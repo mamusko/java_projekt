@@ -28,7 +28,7 @@ public abstract class Object implements Serializable {
 	}
 	
 	public boolean destroy(){
-		throw new java.lang.UnsupportedOperationException("Not implemented.");
+		return false;
 	}
 	
 	public boolean collidesWPlayer(Hrac hrac){
@@ -36,7 +36,7 @@ public abstract class Object implements Serializable {
 	}
 	
 	public void dmg(double d){
-		throw new java.lang.UnsupportedOperationException("Not implemented.");
+		
 	}
 	
 	public boolean collidesWStrela(Strela strela){

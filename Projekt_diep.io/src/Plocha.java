@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,6 +23,7 @@ public class Plocha extends Pane implements Runnable{
 	private boolean klik = false;
 	public Timer timer;
 	public Timer timer_klik;
+	int maxObjects = 50;
 	double event_x;
 	double event_y;
 	Plocha p = this;
@@ -29,12 +31,18 @@ public class Plocha extends Pane implements Runnable{
 	public boolean DOWN = false;
 	public boolean RIGHT = false;
 	public boolean LEFT = false;
+	private double whiteFieldW = 960;
+	private double whiteFieldH = 1200;
 	
 	public Plocha(){
 		hrac = new Hrac(this);
 		Thread t1 = new Thread(hrac);
+		Hranica h1 = new Hranica(this,-800,-640,3200, 2560, Color.BROWN);
+		Hranica h2 = new Hranica(this,0,0,whiteFieldH, whiteFieldW, Color.WHITE);
 		Rect r = new Rect(this,300,200,Color.BLUE,30);
-		other_objects.add(r);
+		other_objects.add(h1);
+		other_objects.add(h2);
+		generateObjects();
         t1.start();  
         timer = new Timer();
         
@@ -105,6 +113,15 @@ public class Plocha extends Pane implements Runnable{
 	}
 	
 	public void generateObjects(){
+		if (other_objects.size() < maxObjects){
+			while (other_objects.size() < maxObjects){
+				Random rnd = new Random();
+				double y = rnd.nextInt((int) whiteFieldH)  + other_objects.get(1).y-50;
+				double x = rnd.nextInt((int) whiteFieldW)  + other_objects.get(1).x-50;
+				Rect r = new Rect(this,x,y,Color.BLUE,30);
+				other_objects.add(r);
+			}
+		}
 	}
 	
 	public void repaint() {
@@ -121,11 +138,8 @@ public class Plocha extends Pane implements Runnable{
 	
 	public void clearScreen(){
 		getChildren().clear();
-		Rectangle b= new Rectangle(3200, 2560, Color.BROWN);
-		b.setX(-800);
-		b.setY(-640);
-		getChildren().add(b);
-		Rectangle box = new Rectangle(800, 640, Color.WHITE);
+		
+		Rectangle box = new Rectangle(1200, 960, Color.WHITE);
 		box.setX(0);
 		box.setY(0);
 		getChildren().add(box);
@@ -162,10 +176,13 @@ public class Plocha extends Pane implements Runnable{
 		}, 0, hrac.attack_speed);
 	    
 	}
+	
+
 
 	@Override
 	public void run() {
 		while (true){
+			generateObjects();
 			ArrayList<Object> to_destroy = new ArrayList<Object>();
 			for (int i = 0;i < p.other_objects.size();i++){
 				if (p.other_objects.get(i).collidesWPlayer(hrac)){
@@ -181,7 +198,7 @@ public class Plocha extends Pane implements Runnable{
 						if (p.other_objects.get(i).destroy()){
 							to_destroy.add(p.other_objects.get(i));
 						}
-						to_destroy.add(p.strely.get(i));
+						to_destroy.add(p.strely.get(j));
 					}
 				}
 			}
@@ -195,8 +212,7 @@ public class Plocha extends Pane implements Runnable{
 				}
 				p.strely.removeAll(to_destroy);
 			}
-			
-			
+			generateObjects();
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
