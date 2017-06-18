@@ -15,6 +15,7 @@ public abstract class Object implements Serializable {
 	public double y;
 	public double dmg;
 	public double curHp;
+	public double maxHp;
 	public double bar_x;
 	public double bar_y;
 	private static final long serialVersionUID = -5579367124701664959L;

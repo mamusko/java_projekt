@@ -6,7 +6,7 @@ public class Rect extends Object{
 	double size;
 	Color col;
 	Plocha p;
-	double maxHp = 100;
+	
 	public boolean destroy = false;
 	
 	public Rect(Plocha plocha,double x,double y, Color col, double size){
@@ -16,6 +16,7 @@ public class Rect extends Object{
 		this.size = size;
 		p = plocha;
 		dmg = 2;
+		maxHp = 100;
 		curHp = maxHp;
 		bar_x = x-size -4;
 		bar_y = y + size + size*0.5;

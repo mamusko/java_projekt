@@ -59,6 +59,7 @@ class Strela extends Object implements Runnable{
 	public void paint(){
 		 Circle c = new Circle(x,y,r);
 	     c.setFill(Color.ORANGERED);
+	     c.setStroke(Color.BLACK);
 	     p.getChildren().add(c);
 	}
 	

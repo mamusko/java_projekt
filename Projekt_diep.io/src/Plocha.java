@@ -48,6 +48,7 @@ public class Plocha extends Pane implements Runnable{
         
         
         setOnKeyPressed(event -> {
+        	System.out.println(event.getCode());
 			if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.W)){
 				UP = true;
 			}
@@ -59,6 +60,29 @@ public class Plocha extends Pane implements Runnable{
 			}
 			if (event.getCode().equals(KeyCode.RIGHT) || event.getCode().equals(KeyCode.D)){
 				RIGHT = true;
+			}
+			if (hrac.upgrades > 0){
+				if (event.getCode().equals(KeyCode.DIGIT1)){
+					hrac.upgrades--;
+				}
+				else if (event.getCode().equals(KeyCode.DIGIT2)){
+					hrac.upgrades--;
+				}
+				else if (event.getCode().equals(KeyCode.DIGIT3)){
+					hrac.upgrades--;
+				}
+				else if (event.getCode().equals(KeyCode.DIGIT4)){
+					hrac.upgrades--;
+				}
+				else if (event.getCode().equals(KeyCode.DIGIT5)){
+					hrac.upgrades--;
+				}
+				else if (event.getCode().equals(KeyCode.DIGIT6)){
+					hrac.upgrades--;
+				}
+				
+				
+					
 			}
 		});
 		
@@ -118,7 +142,7 @@ public class Plocha extends Pane implements Runnable{
 				Random rnd = new Random();
 				double y = rnd.nextInt((int) whiteFieldH)  + other_objects.get(1).y-50;
 				double x = rnd.nextInt((int) whiteFieldW)  + other_objects.get(1).x-50;
-				Rect r = new Rect(this,x,y,Color.BLUE,30);
+				Rect r = new Rect(this,x,y,Color.RED,30);
 				other_objects.add(r);
 			}
 		}
@@ -189,6 +213,7 @@ public class Plocha extends Pane implements Runnable{
 					hrac.dmg(p.other_objects.get(i).dmg);
 					p.other_objects.get(i).dmg(hrac.dmg);
 					if (p.other_objects.get(i).destroy()){
+						hrac.addXp(p.other_objects.get(i).maxHp);
 						to_destroy.add(p.other_objects.get(i));
 					}
 				}
@@ -197,6 +222,7 @@ public class Plocha extends Pane implements Runnable{
 						p.other_objects.get(i).dmg(hrac.dmg);
 						if (p.other_objects.get(i).destroy()){
 							to_destroy.add(p.other_objects.get(i));
+							hrac.addXp(p.other_objects.get(i).maxHp);
 						}
 						to_destroy.add(p.strely.get(j));
 					}

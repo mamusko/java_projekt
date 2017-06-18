@@ -14,17 +14,24 @@ class Hrac implements Runnable{
 	double y;
 	double bar_x;
 	double bar_y;
-	double dmg;
-	double maxHp = 500;
-	double curHp;
 	double h = 50;
 	double w = 20;
 	double r = 30;
-	int attack_speed = 200;
 	double angle;
 	Plocha p;
+	Panel panel;
+	double curHp;
+	double xpToNextLevel = 1000;
+	
+	int upgrades = 0;
+	int attack_speed = 200;
 	double bullet_speeed;
 	double movement_speed = 5;
+	double dmg;
+	double maxHp = 500;
+	double HpRegen = 0.5;
+	double xp = 0;
+	
 
 	public Hrac(Plocha plocha){
 		x = 400;
@@ -32,16 +39,15 @@ class Hrac implements Runnable{
 		dmg = 150;
 		curHp = maxHp;
 		bar_x = 345;
-		bar_y = 600;
+		bar_y = 610;
 		angle = 0;
 		p = plocha;
+		panel = new Panel();
 
 		
 	}
 	
 	public void paint(){
-		
-		
 		Rectangle delo = new Rectangle(w, h, Color.BLACK);
 		delo.setX(x-10);
 		delo.setY(y);
@@ -51,10 +57,12 @@ class Hrac implements Runnable{
         rotate.setAngle(Math.toDegrees(angle)+180); 
         rotate.setPivotX(x); 
         rotate.setPivotY(y); 
+        delo.setStroke(Color.BLACK);
         delo.getTransforms().addAll(rotate); 
         
         Circle c = new Circle(x,y,r);
         c.setFill(Color.BLUEVIOLET);
+        c.setStroke(Color.BLACK);
         p.getChildren().add(c);
         
         ProgressBar pb = new ProgressBar(curHp/maxHp);
@@ -69,6 +77,16 @@ class Hrac implements Runnable{
         pb.setScaleX(1.8);
         pb.setScaleY(1.5);
         p.getChildren().add(pb);
+        
+        ProgressBar pb2 = new ProgressBar(xp/xpToNextLevel);
+        pb2.setLayoutX(bar_x);
+        pb2.setLayoutY(bar_y-30);
+        pb2.setStyle("-fx-accent: blue;"); 
+        pb2.setScaleX(1.8);
+        pb2.setScaleY(1.5);
+        p.getChildren().add(pb2);
+        
+        panel.paint(p);
 	}
 	
 	public void dmg(double d){
@@ -80,6 +98,16 @@ class Hrac implements Runnable{
 		}
 	}
 
+	public void addXp(double pocet){
+		xp += pocet;
+		
+		if (xp > xpToNextLevel){
+			xp = xp - xpToNextLevel;
+			xpToNextLevel = xpToNextLevel *1.2;
+			upgrades++;
+			
+		}
+	}
 	@Override
 	public void run() {
 		while (true){
